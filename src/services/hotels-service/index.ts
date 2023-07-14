@@ -1,14 +1,13 @@
-import { notFoundError } from "@/errors";
-import { paymentRequiredError } from "@/errors/payment-required-error";
+import { notFoundError, paymentRequiredError } from "@/errors";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import hotelsRepository from "@/repositories/hotels-repository";
 import ticketsRepository from "@/repositories/tickets-repository";
 
 async function getHotels(id: number){
     const ticket = await hotelExists(id);
-
+    
     //Ticket não foi pago, é remoto ou não inclui hotel
-    if(ticket.status === "RESERVED" ||  ticket.TicketType.isRemote || !ticket.TicketType.includesHotel){
+    if(ticket.status === "RESERVED" || ticket.TicketType.isRemote === true|| ticket.TicketType.includesHotel === false){
         throw paymentRequiredError();
     };
 
@@ -19,7 +18,7 @@ async function getHotelId(userId: number, id: number){
     const ticket = await hotelExists(userId);
 
     //Ticket não foi pago, é remoto ou não inclui hotel
-    if(ticket.status === "RESERVED" ||  ticket.TicketType.isRemote || !ticket.TicketType.includesHotel){
+    if(ticket.status === "RESERVED" ||  ticket.TicketType.isRemote === true|| ticket.TicketType.includesHotel === false){
         throw paymentRequiredError();
     };
 
@@ -32,7 +31,7 @@ async function getHotelId(userId: number, id: number){
 
 async function hotelExists(userId: number){
     const hotel = await hotelsRepository.findManyHotels();
-    if(!hotel){
+    if(hotel.length === 0){
         throw notFoundError();
     };
 
