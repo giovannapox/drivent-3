@@ -4,7 +4,7 @@ import { Response } from "express";
 import httpStatus from "http-status";
 
 export async function getHotels(req: AuthenticatedRequest, res: Response) {
-    const userId = req.userId;
+    const { userId } = req;
 
     try {
         const hotels = await hotelsService.getHotels(userId);

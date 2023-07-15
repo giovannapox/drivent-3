@@ -7,7 +7,7 @@ async function getHotels(id: number){
     const ticket = await hotelExists(id);
     
     //Ticket não foi pago, é remoto ou não inclui hotel
-    if(ticket.status === "RESERVED" || ticket.TicketType.isRemote === true|| ticket.TicketType.includesHotel === false){
+    if(ticket.status === "RESERVED" || ticket.TicketType.isRemote === true || ticket.TicketType.includesHotel === false){
         throw paymentRequiredError();
     };
 
@@ -18,7 +18,7 @@ async function getHotelId(userId: number, id: number){
     const ticket = await hotelExists(userId);
 
     //Ticket não foi pago, é remoto ou não inclui hotel
-    if(ticket.status === "RESERVED" ||  ticket.TicketType.isRemote === true|| ticket.TicketType.includesHotel === false){
+    if(ticket.status === "RESERVED" ||  ticket.TicketType.isRemote === true || ticket.TicketType.includesHotel === false){
         throw paymentRequiredError();
     };
 
