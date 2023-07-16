@@ -5,13 +5,20 @@ import ticketsRepository from "@/repositories/tickets-repository";
 
 async function getHotels(id: number){
     const ticket = await hotelExists(id);
-    
+
+    console.log(ticket, "get hotel")
     //Ticket não foi pago, é remoto ou não inclui hotel
     if(ticket.status === "RESERVED" || ticket.TicketType.isRemote === true || ticket.TicketType.includesHotel === false){
+        console.log('payment required error')
         throw paymentRequiredError();
     };
 
-    return await hotelsRepository.findManyHotels();
+    const hotel = await hotelsRepository.findManyHotels();
+    if(hotel.length === 0){
+        throw notFoundError();
+    };
+
+    return hotel;
 };
 
 async function getHotelId(userId: number, id: number){
@@ -30,11 +37,6 @@ async function getHotelId(userId: number, id: number){
 };
 
 async function hotelExists(userId: number){
-    const hotel = await hotelsRepository.findManyHotels();
-    if(hotel.length === 0){
-        throw notFoundError();
-    };
-
     const enrollmentExists = await enrollmentRepository.findWithAddressByUserId(userId);
     if(!enrollmentExists){
         throw notFoundError();

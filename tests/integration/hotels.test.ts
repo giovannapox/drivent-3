@@ -42,7 +42,14 @@ describe("get hotels", () => {
             const randomUser = await createUser();
             const token = await generateValidToken(randomUser);
             const enrollment = await createEnrollmentWithAddress(randomUser);
-            const ticketType = await createTicketType();
+            const ticketType = await prisma.ticketType.create({
+                data: {
+                    name: faker.name.findName(),
+                    price: faker.datatype.number(),
+                    isRemote: false,
+                    includesHotel: true,
+                },
+            });
             await createTicket(enrollment.id, ticketType.id, "PAID");
 
             const { status } = await server.get('/hotels').set('Authorization', `Bearer ${token}`)
@@ -55,7 +62,6 @@ describe("get hotels", () => {
             const enrollment = await createEnrollmentWithAddress(randomUser);
             const ticketType = await createTicketType();
             await createTicket(enrollment.id, ticketType.id, "RESERVED");
-            await createRandomHotel();
 
             const { status } = await server.get('/hotels').set('Authorization', `Bearer ${token}`)
             expect(status).toBe(httpStatus.PAYMENT_REQUIRED);

@@ -4,7 +4,7 @@ import { Response } from "express";
 import httpStatus from "http-status";
 
 export async function getHotels(req: AuthenticatedRequest, res: Response) {
-    const { userId } = req;
+    const userId = req.userId;
 
     try {
         const hotels = await hotelsService.getHotels(userId);
@@ -25,7 +25,6 @@ export async function getHotelId(req: AuthenticatedRequest, res: Response) {
 
     try {
         const hotel = await hotelsService.getHotelId(userId, Number(hotelId));
-        console.log(hotel)
         return res.status(httpStatus.OK).send(hotel);
     } catch (err) {
         if (err.name === "NotFoundError") {
